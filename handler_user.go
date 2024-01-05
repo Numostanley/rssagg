@@ -40,3 +40,34 @@ func (apiCfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Reques
 
 	respondWithJSON(w, 200, databaseUserToUser(user))
 }
+
+func (apiCfg *apiConfig) handlerGetAllUsers(w http.ResponseWriter, r *http.Request) {
+	users, err := apiCfg.DB.GetAllUsers(r.Context())
+
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Error getting all user: %v \n", err))
+		return
+	}
+
+	respondWithJSON(w, 200, databaseUsersToUsers(users))
+}
+
+func (apiCfg *apiConfig) handlerGetUser(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+
+	userId, err := uuid.Parse(id)
+
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Error parsing uuid: %v \n", err))
+		return
+	}
+
+	user, err := apiCfg.DB.GetUserByID(r.Context(), userId)
+
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Error getting all user: %v \n", err))
+		return
+	}
+
+	respondWithJSON(w, 200, databaseUserToUser(user))
+}

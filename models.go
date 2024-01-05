@@ -22,3 +22,19 @@ func databaseUserToUser(dbUser database.User) User {
 		Name:      dbUser.Name,
 	}
 }
+
+func databaseUsersToUsers(dbUsers []database.User) []User {
+
+	dbUserList := []User{}
+
+	for _, dbUser := range dbUsers {
+		user := User{
+			ID:        dbUser.ID,
+			CreatedAt: dbUser.CreatedAt,
+			UpdatedAt: dbUser.UpdatedAt,
+			Name:      dbUser.Name,
+		}
+		dbUserList = append(dbUserList, user)
+	}
+	return dbUserList
+}
